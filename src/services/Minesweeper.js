@@ -5,9 +5,10 @@ export const CELL_STATES = {
 
 export const FLAG_STATES = {
   FLAGGED: 'FLAGGED',
+  QUESTION: 'QUESTION',
 };
 
-export const BOARD_WIDTH = 12;
+export const BOARD_WIDTH = 15;
 const NUM_MINES = 40;
 
 const getMineIndexes = board => {
@@ -166,7 +167,9 @@ export const primaryTouchCell = (cell, board) => {
   }
 
   const newBoard = [...board];
-  cascadeTouchCell(cell, newBoard); // SIDE-EFFECT!
+  cascadeTouchCell(cell, newBoard, () => {
+    console.log('BOOM!!');
+  }); // SIDE-EFFECT!
   return newBoard;
 };
 
@@ -194,12 +197,17 @@ const touchCellOnBoard = (cell, board) => {
   return updatedCell;
 };
 
-const cascadeTouchCell = (cell, board) => {
+const cascadeTouchCell = (cell, board, onMineReveal) => {
   if (cell.state === CELL_STATES.TOUCHED) {
     return;
   }
 
   touchCellOnBoard(cell, board); // SIDE-EFFECT!
+
+  if (cell.hasMine) {
+    onMineReveal();
+    return;
+  }
 
   if (cell.surroundingMineCount === 0) {
     const surroundingCells = getSurroundingCells(cell, board);

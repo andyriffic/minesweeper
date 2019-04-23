@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { CELL_STATES, BOARD_WIDTH, FLAG_STATES } from '../services/Minesweeper';
+import { Modal } from '@react95/core';
 
 const StyledBoard = styled.div`
   width: 500px;
@@ -13,14 +14,17 @@ const StyledBoard = styled.div`
 
 const StyledCell = styled.div`
   border: 1px solid black;
+  font-size: 25px;
   ${props => !(props.touched || props.hasMine) && `background-color: #ccc;`}
   ${props => props.touched && `background-color: steelblue;`}
   ${props => props.hasMine && `background-color: orange;`}
-  ${props => props.flagged && `background-color: darkgreen;`}
+  ${props => props.flagged && `::before{ content: '⛳'}`}
+  ${props => props.bomb && `background-color: red; ::before{ content: '💣'}`}
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: ${props => (props.touched ? 'default' : 'pointer')};
+  transition: background-color 300ms ease-out;
 `;
 
 export const Board = ({
@@ -29,26 +33,37 @@ export const Board = ({
   onSecondarySelectCell,
 }) => {
   return (
-    <StyledBoard>
-      {board.map(cell => (
-        <StyledCell
-          key={cell.id}
-          hasMine={cell.hasMine}
-          touched={cell.state === CELL_STATES.TOUCHED}
-          flagged={cell.flag === FLAG_STATES.FLAGGED}
-          onClick={() => onPrimarySelectCell(cell)}
-          onContextMenu={e => {
-            e.preventDefault();
-            onSecondarySelectCell(cell);
-          }}
-        >
-          {cell.state === CELL_STATES.TOUCHED &&
-            cell.surroundingMineCount > 0 && (
-              <span>{cell.surroundingMineCount}</span>
-            )}
-          {/* {cell.id}({cell.surroundingMineCount}) */}
-        </StyledCell>
-      ))}
-    </StyledBoard>
+    <Modal
+      icon="computer"
+      title="Minesweeper"
+      closeModal={() => {}}
+      width="auto"
+      height="auto"
+    >
+      <div>
+        <StyledBoard>
+          {board.map(cell => (
+            <StyledCell
+              key={cell.id}
+              hasMine={cell.hasMine}
+              touched={cell.state === CELL_STATES.TOUCHED}
+              flagged={cell.flag === FLAG_STATES.FLAGGED}
+              bomb={cell.state === CELL_STATES.TOUCHED && cell.hasMine}
+              onClick={() => onPrimarySelectCell(cell)}
+              onContextMenu={e => {
+                e.preventDefault();
+                onSecondarySelectCell(cell);
+              }}
+            >
+              {cell.state === CELL_STATES.TOUCHED &&
+                !cell.hasMine && cell.surroundingMineCount > 0 && (
+                  <span>{cell.surroundingMineCount}</span>
+                )}
+              {/* {cell.id}({cell.surroundingMineCount}) */}
+            </StyledCell>
+          ))}
+        </StyledBoard>
+      </div>
+    </Modal>
   );
 };
