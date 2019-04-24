@@ -5,6 +5,10 @@ import { CELL_STATES, BOARD_WIDTH, FLAG_STATES } from '../services/Minesweeper';
 const StyledBoard = styled.div`
   width: 500px;
   height: 500px;
+  border-top: 2px solid white;
+  border-left: 2px solid white;
+  border-right: 2px solid black;
+  border-bottom: 2px solid black;
   margin: 0 auto;
   display: grid;
   grid-template-columns: repeat(${BOARD_WIDTH}, ${100 / BOARD_WIDTH}%);
@@ -12,13 +16,16 @@ const StyledBoard = styled.div`
 `;
 
 const StyledCell = styled.div`
-  border: 1px solid black;
+  border-top: 2px solid white;
+  border-left: 2px solid white;
+  border-right: 2px solid black;
+  border-bottom: 2px solid black;
   font-size: 25px;
-  ${props => !(props.touched) && `background-color: #ccc;`}
-  ${props => props.touched && `background-color: steelblue;`}
+  ${props => !(props.touched || props.hasMine) && `background-color: #ccc;`}
+  ${props => props.touched && `background-color: #ccc; border: 1px solid #666;`}
   // ${props => props.hasMine && `background-color: orange;`}
   ${props => props.flagged && `::before{ content: '⛳'; position: relative; top: 2px;}`}
-  ${props => props.bomb && `background-color: red; ::before{ content: '💣'; position: relative; top: 2px; }`}
+  ${props => props.bomb && `background-color: red; ::before{ content: '💣'; position: relative; top: 2px;}`}
   display: flex;
   justify-content: center;
   align-items: center;
