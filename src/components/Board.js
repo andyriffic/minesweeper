@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { CELL_STATES, BOARD_WIDTH, FLAG_STATES } from '../services/Minesweeper';
 import { Modal } from '@react95/core';
+import { Status } from './Status';
 
 const StyledBoard = styled.div`
   width: 500px;
@@ -17,9 +18,9 @@ const StyledCell = styled.div`
   font-size: 25px;
   ${props => !(props.touched || props.hasMine) && `background-color: #ccc;`}
   ${props => props.touched && `background-color: steelblue;`}
-  ${props => props.hasMine && `background-color: orange;`}
-  ${props => props.flagged && `::before{ content: '⛳'}`}
-  ${props => props.bomb && `background-color: red; ::before{ content: '💣'}`}
+  ${props => props.hasMine && `background-color: #ccc; ::before{ content: '💣'; position: relative; top: 2px; }`}
+  ${props => props.flagged && `::before{ content: '⛳'; position: relative; top: 2px;}`}
+  ${props => props.bomb && `background-color: red; ::before{ content: '💥' position: relative; top: 2px; }`}
   display: flex;
   justify-content: center;
   align-items: center;

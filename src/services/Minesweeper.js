@@ -9,7 +9,7 @@ export const FLAG_STATES = {
 };
 
 export const BOARD_WIDTH = 15;
-const NUM_MINES = 40;
+export const NUM_MINES = 40;
 
 const getMineIndexes = board => {
   const mineIndexes = [];
@@ -160,6 +160,20 @@ export const generateBoard = () => {
 
   return board;
 };
+
+export const getFlaggedCells = (board) => {
+  return board.filter(cell => cell.flag === FLAG_STATES.FLAGGED);
+}
+
+export const touchAllMines = (board) => {
+  const newBoard = [...board];
+
+  for (let i = 0; i < newBoard.length; i++) {
+    if (newBoard[i].hasMine) {
+      touchCellOnBoard(newBoard[i], newBoard);
+    }
+  }
+}
 
 export const primaryTouchCell = (cell, board) => {
   if (cell.flag || cell.state !== CELL_STATES.UNTOUCHED) {

@@ -5,13 +5,17 @@ import {
   primaryTouchCell,
   getSurroundingCells,
   secondaryCellTouch,
+  NUM_MINES,
+  getFlaggedCells,
 } from './services/Minesweeper';
 import { Board } from './components/Board';
+import { Status } from './components/Status';
 
 const initialBoard = generateBoard();
 
 const View = () => {
   const [board, setBoard] = useState(initialBoard);
+  const [numberOfMinesDetected, setNumberOfMinesDetected] = useState(0);
 
   const onPrimarySelectCell = cell => {
     console.log('primary select', cell);
@@ -25,10 +29,12 @@ const View = () => {
     console.log('secondary select', cell);
     const newBoard = secondaryCellTouch(cell, board);
     setBoard(newBoard);
+    setNumberOfMinesDetected(getFlaggedCells(newBoard).length);
   };
 
   return (
     <div className="App">
+      <Status numberOfMinesLeft={NUM_MINES - numberOfMinesDetected}/>
       <Board
         board={board}
         onPrimarySelectCell={onPrimarySelectCell}
