@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Modal } from '@react95/core';
 import './App.css';
 import {
   generateBoard,
@@ -16,6 +17,7 @@ const initialBoard = generateBoard();
 const View = () => {
   const [board, setBoard] = useState(initialBoard);
   const [numberOfMinesDetected, setNumberOfMinesDetected] = useState(0);
+  const [gameStatus, setGameStatus] = useState('IN_PROGRESS');
 
   const onPrimarySelectCell = cell => {
     console.log('primary select', cell);
@@ -34,12 +36,19 @@ const View = () => {
 
   return (
     <div className="App">
-      <Status numberOfMinesLeft={NUM_MINES - numberOfMinesDetected}/>
-      <Board
-        board={board}
-        onPrimarySelectCell={onPrimarySelectCell}
-        onSecondarySelectCell={onSecondarySelectCell}
-      />
+      <Modal
+        icon="computer"
+        title="Minesweeper"
+        closeModal={() => { }}
+        width="auto"
+        height="auto"
+      ><Status numberOfMinesLeft={NUM_MINES - numberOfMinesDetected} gameStatus={gameStatus} />
+        <Board
+          board={board}
+          onPrimarySelectCell={onPrimarySelectCell}
+          onSecondarySelectCell={onSecondarySelectCell}
+        /></Modal>
+
     </div>
   );
 };

@@ -8,8 +8,8 @@ export const FLAG_STATES = {
   QUESTION: 'QUESTION',
 };
 
-export const BOARD_WIDTH = 15;
-export const NUM_MINES = 40;
+export const BOARD_WIDTH = 9;
+export const NUM_MINES = 10;
 
 const getMineIndexes = board => {
   const mineIndexes = [];
@@ -166,11 +166,12 @@ export const getFlaggedCells = (board) => {
 }
 
 export const touchAllMines = (board) => {
-  const newBoard = [...board];
 
-  for (let i = 0; i < newBoard.length; i++) {
-    if (newBoard[i].hasMine) {
-      touchCellOnBoard(newBoard[i], newBoard);
+  for (let i = 0; i < board.length; i++) {
+    if (board[i].hasMine) {
+      // console.log('Touching mine', newBoard[i]);
+      touchCellOnBoard(board[i], board);
+      // console.log('Touched mine', newBoard[i]);
     }
   }
 }
@@ -184,6 +185,11 @@ export const primaryTouchCell = (cell, board) => {
   cascadeTouchCell(cell, newBoard, () => {
     console.log('BOOM!!');
   }); // SIDE-EFFECT!
+
+  if (cell.hasMine) {
+    touchAllMines(newBoard);
+  }
+
   return newBoard;
 };
 
@@ -205,6 +211,7 @@ export const secondaryCellTouch = (cell, board) => {
 const touchCellOnBoard = (cell, board) => {
   const updatedCell = {
     ...cell,
+    flag: null,
     state: CELL_STATES.TOUCHED,
   };
   board[cell.id] = updatedCell;
